@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # Database
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: ${PG_DB}
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+    ports:
+      - "${PG_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+#  # Kafka (no Zookeeper needed)
+#  kafka:
+#    image: confluentinc/cp-kafka:7.4.0
+#    environment:
+#      KAFKA_NODE_ID: 1
+#      KAFKA_PROCESS_ROLES: 'broker,controller'
+#      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:29093'
+#      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
+#      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092'
+#      KAFKA_LISTENERS: 'PLAINTEXT://kafka:29092,CONTROLLER://kafka:29093,PLAINTEXT_HOST://0.0.0.0:9092'
+#      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+#      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+#      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+#      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+#      CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+#    ports:
+#      - "9092:9092"
+#    command: >
+#      bash -c "
+#        kafka-storage format -t MkU3OEVBNTcwNTJENDM2Qk -c /etc/kafka/kafka.properties &&
+#        /etc/confluent/docker/run
+#      "
+
+volumes:
+  postgres_data:

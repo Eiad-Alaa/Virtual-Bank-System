@@ -1,5 +1,6 @@
 package com.account.accountservice.services;
 
+import com.account.accountservice.constants.AccountStatus;
 import com.account.accountservice.dto.AccountDto;
 import com.account.accountservice.dto.CreateAccountReqDto;
 import com.account.accountservice.dto.CreateAccountRespDto;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -72,6 +74,13 @@ public class AccountService {
 
         fromAccount.setBalance(fromAccount.getBalance().subtract(req.getAmount()));
         toAccount.setBalance(toAccount.getBalance().add(req.getAmount()));
+
+        fromAccount.setStatus(AccountStatus.ACTIVE);
+        toAccount.setStatus(AccountStatus.ACTIVE);
+
+        LocalDateTime now = LocalDateTime.now();
+        fromAccount.setLastTransactionAt(now);
+        toAccount.setLastTransactionAt(now);
 
         accountRepo.save(fromAccount);
         accountRepo.save(toAccount);

@@ -30,11 +30,10 @@ public class GlobalExceptionHandler {
         ErrorResponseDto errorMessage = ErrorResponseDto.builder()
                 .status(400)
                 .error("Bad Request")
-                .message("Invalid UserId or AccountType")
+                .message("Invalid Id or AccountType")
                 .build();
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
-
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -62,5 +61,16 @@ public class GlobalExceptionHandler {
                                     .build();
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resp);
+    }
+
+    @ExceptionHandler(InsufficientFundsException.class)
+    public ResponseEntity<ErrorResponseDto> insufficientFunds(InsufficientFundsException e){
+        ErrorResponseDto resp = ErrorResponseDto.builder()
+                .status(400)
+                .error("Bad Request")
+                .message(e.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resp);
     }
 }

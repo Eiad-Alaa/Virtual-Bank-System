@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Builder
@@ -24,5 +25,5 @@ public class CreateAccountReqDto {
 
     @NotNull(message = "Balance must not be blank")
     @Min(value = 0 , message = "Initial Balance must not be negative")
-    private Long initialBalance;
+    private BigDecimal initialBalance;
 }

@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -104,5 +106,12 @@ public class TransactionService {
                 .status("Success")
                 .timestamp(LocalDateTime.now())
                 .build();
+    }
+
+    public List<TransactionDto> getAccountTransactions(UUID accountId){
+        List<Transaction> transactions =
+                transactionRepo.findByFromAccountOrToAccount(accountId , accountId);
+
+        return transactions.stream().map(transactionMapper::toEntity).collect(Collectors.toList());
     }
 }

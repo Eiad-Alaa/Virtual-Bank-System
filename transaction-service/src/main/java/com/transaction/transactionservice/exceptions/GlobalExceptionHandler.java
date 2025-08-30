@@ -1,9 +1,11 @@
-package com.account.accountservice.exceptions;
+package com.transaction.transactionservice.exceptions;
 
-import com.account.accountservice.dto.ErrorResponseDto;
+import com.transaction.transactionservice.dto.ErrorResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -30,7 +32,7 @@ public class GlobalExceptionHandler {
         ErrorResponseDto errorMessage = ErrorResponseDto.builder()
                 .status(400)
                 .error("Bad Request")
-                .message("Invalid Id or AccountType")
+                .message("Invalid 'from' or 'to' account ID.")
                 .build();
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
@@ -52,13 +54,24 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
+    @ExceptionHandler(TransactionNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> transactionNotFound(TransactionNotFoundException e){
+        ErrorResponseDto resp = ErrorResponseDto.builder()
+                .status(404)
+                .error("Invalid Transaction")
+                .message(e.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resp);
+    }
+
     @ExceptionHandler(AccountNotFoundException.class)
     public ResponseEntity<ErrorResponseDto> accountNotFoundExc(AccountNotFoundException e){
         ErrorResponseDto resp = ErrorResponseDto.builder()
-                                    .status(404)
-                                    .error("Not Found")
-                                    .message(e.getMessage())
-                                    .build();
+                .status(404)
+                .error("Not Found")
+                .message(e.getMessage())
+                .build();
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resp);
     }

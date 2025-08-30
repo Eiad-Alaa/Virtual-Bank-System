@@ -1,12 +1,11 @@
-package com.account.accountservice.dto;
+package com.transaction.transactionservice.dto;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -14,7 +13,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TransferRequestDto {
+public class TransactionInitiationReqDto {
 
     @NotNull(message = "AccountIds can't be empty")
     private UUID fromAccountId;
@@ -24,4 +23,6 @@ public class TransferRequestDto {
 
     @NotNull(message = "amount can't be empty")
     private BigDecimal amount;
+
+    private String description;
 }

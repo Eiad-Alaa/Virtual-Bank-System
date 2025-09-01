@@ -16,7 +16,7 @@ public class LogProducer {
     private KafkaTemplate<String, String> kafkaTemplate;
 
     public void sendLog(String message, String messageType) {
-        String producerService = "user-service";
+        String producerService = "account-service";
         Map<String, String> logMessage = Map.of(
                 "message", message,
                 "messageType", messageType,

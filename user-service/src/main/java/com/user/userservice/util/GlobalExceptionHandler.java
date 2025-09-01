@@ -1,6 +1,10 @@
 package com.user.userservice.util;
 
+import com.user.userservice.producer.LogProducer;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,6 +17,12 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    @Autowired
+    private LogProducer logProducer;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleUserNotFound(UserNotFoundException ex) {
         return buildResponse(ex.getMessage(), null, HttpStatus.NOT_FOUND);
@@ -57,6 +67,16 @@ public class GlobalExceptionHandler {
         Map<String, Object> response = new HashMap<>();
         response.put("message", message);
         if (details != null) response.put("details", details);
+        logAsJson(response, "Response");
         return ResponseEntity.status(status).body(response);
+    }
+
+    private void logAsJson(Object obj, String type) {
+        try {
+            String json = objectMapper.writeValueAsString(obj);
+            logProducer.sendLog(json, type);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 }

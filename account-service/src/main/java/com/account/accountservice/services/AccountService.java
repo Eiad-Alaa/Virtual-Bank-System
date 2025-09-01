@@ -9,9 +9,11 @@ import com.account.accountservice.entity.Account;
 import com.account.accountservice.entity.Transfer;
 import com.account.accountservice.exceptions.AccountNotFoundException;
 import com.account.accountservice.exceptions.InsufficientFundsException;
+import com.account.accountservice.exceptions.UserNotFoundException;
 import com.account.accountservice.mappers.AccountMapper;
 import com.account.accountservice.repositories.AccountRepository;
 import com.account.accountservice.repositories.TransferRepository;
+import com.account.accountservice.utils.UserClient;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,7 @@ public class AccountService {
     private final AccountRepository accountRepo;
     private final AccountMapper mapper;
     private final TransferRepository transferRepo;
+    private final UserClient userClient;
 
     public AccountDto getAccountById(UUID accountId){
 
@@ -91,6 +94,8 @@ public class AccountService {
     public CreateAccountRespDto addAccount(CreateAccountReqDto request){
 
         Account acc = mapper.createEntity(request);
+
+        userClient.checkIfUserExists(acc.getUserId());
 
         acc.setAccountId(UUID.randomUUID());
         acc.setAccountNum(generateRandomAccNumber(10));

@@ -72,6 +72,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resp);
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> userNotFoundExc(UserNotFoundException e){
+        ErrorResponseDto resp = ErrorResponseDto.builder()
+                .status(404)
+                .error("Not Found")
+                .message(e.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resp);
+    }
+
     @ExceptionHandler(InsufficientFundsException.class)
     public ResponseEntity<ErrorResponseDto> insufficientFunds(InsufficientFundsException e){
         ErrorResponseDto resp = ErrorResponseDto.builder()
